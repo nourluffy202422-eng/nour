@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>قنوات نور 🩶 والتحدث مع الذكاء</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 0;
+    min-height: 100vh;
+    background: url('https://files.catbox.moe/dyusej.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+  }
+  #app {
+    max-width: 480px;
+    margin: 20px auto;
+    background-color: rgba(0,0,0,0.65);
+    border-radius: 15px;
+    padding: 25px 20px 40px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.9);
+    min-height: 550px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .back-btn {
+    position: absolute;
+    top: 15px; left: 15px;
+    background-color: rgba(255 255 255 / 0.2);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 18px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s;
+    display: none;
+    z-index: 10;
+  }
+  .back-btn:hover {
+    background-color: rgba(255 255 255 / 0.4);
+  }
+  .logo {
+    display: block;
+    width: 120px;
+    margin: 10px auto 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(255 255 255, 0.8);
+    user-select: none;
+  }
+  h1 {
+    text-align: center;
+    font-weight: 900;
+    margin-bottom: 30px;
+    text-shadow: 0 0 16px #000000cc;
+  }
+  .btn {
+    width: 100%;
+    margin: 12px 0;
+    padding: 16px 10px;
+    border-radius: 18px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255 255 255 / 0.15);
+    border: 2px solid rgba(255 255 255 / 0.3);
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255 255 255, 0.25);
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  .btn:hover {
+    background: rgba(255 255 255 / 0.4);
+    border-color: #4fc3f7;
+    color: #4fc3f7;
+    box-shadow: 0 0 22px #4fc3f7;
+  }
+  .character-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    max-height: 390px;
+    overflow-y: auto;
+    padding-right: 5px;
+  }
+  .char-btn {
+    flex: 1 0 40%;
+    min-width: 140px;
+    padding: 14px 8px;
+    background: rgba(255 255 255 / 0.1);
+    border: 2px solid rgba(255 255 255 / 0.25);
+    border-radius: 18px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(255 255 255, 0.2);
+    transition: all 0.3s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+  .char-btn:hover {
+    background: rgba(255 255 255 / 0.35);
+    border-color: #81d4fa;
+    color: #81d4fa;
+    box-shadow: 0 0 22px #81d4fa;
+  }
+  .char-emoji {
+    font-size: 28px;
+    user-select: none;
+  }
+  #chatArea {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0,0,0,0.45);
+    border-radius: 18px;
+    padding: 18px;
+    overflow: hidden;
+  }
+  #chatMessages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 14px;
+    color: #eee;
+    font-size: 16px;
+    line-height: 1.5;
+    user-select: text;
+  }
+  .msg {
+    margin-bottom: 10px;
+    padding: 11px 14px;
+    border-radius: 14px;
+    max-width: 75%;
+    word-wrap: break-word;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    white-space: pre-line;
+  }
+  .msg.user {
+    background-color: #0288d1;
+    align-self: flex-end;
+    color: #bbdefb;
+  }
+  .msg.bot {
+    background-color: #1565c0;
+    align-self: flex-start;
+    color: #e3f2fd;
+  }
+  #chatInputContainer {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+#chatInput {
+    flex: 1 1 auto;
+    padding: 14px 18px;
+    border-radius: 18px;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    outline: none;
+    background: rgba(255 255 255 / 0.15);
+    color: #fff;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    min-width: 0;
+}
+
+#chatSendBtn {
+    flex: 0 0 auto;
+    padding: 14px 20px;
+    font-size: 17px;
+    min-width: 80px;
+    white-space: nowrap;
+    background: #29b6f6;
+    border-radius: 18px;
+    border: none;
+    font-weight: 900;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 12px #29b6f6;
+}
+  #chatSendBtn:hover { background: #0288d1; box-shadow: 0 0 20px #0288d1; }
+  #loadingIndicator {
+    text-align: center;
+    color: #4fc3f7;
+    margin: 8px 0;
+    font-weight: 700;
+    display: none;
+  }
+  .links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <button class="back-btn" id="backBtn" onclick="goBack()">&larr; العودة</button>
+
+  <!-- الصفحة الرئيسية -->
+  <div id="pageMain" class="page active" style="display: flex; flex-direction: column;">
+    <img src="https://files.catbox.moe/c3pfw5.jpg" alt="nour logo" class="logo" draggable="false" />
+    <h1>💫 روابط نور الرسمية 🩶</h1>
+
+    <div class="links-container">
+      <button class="btn" onclick="openLink('https://whatsapp.com/channel/0029Vaydste3LdQbuCdqHO2X')">🔗 قناة نور</button>
+      <button class="btn" onclick="openLink('https://chat.whatsapp.com/GTvmW4Qasx17ZMw0DQ6uhr')">👥 جروب نور</button>
+      <button class="btn" onclick="openLink('https://wa.me/34634036710')">📞 تواصل مع نور</button>
+      <button class="btn" id="openChatBtn">🤖 التحدث مع الذكاء</button>
+    </div>
+  </div>
+
+  <!-- صفحة اختيار الشخصية -->
+  <div id="pageCharacters" class="page" style="display:none; flex-direction: column;">
+    <h1>اختر شخصية للحديث معها</h1>
+    <div class="character-list" id="characterList"></div>
+  </div>
+
+  <!-- صفحة الشات -->
+  <div id="pageChat" class="page" style="display:none; flex-direction: column;">
+    <h1 id="chatHeader">الشات</h1>
+    <div id="chatArea">
+      <div id="chatMessages"></div>
+      <div id="loadingIndicator">جارٍ تحميل الرد...</div>
+      <div id="chatInputContainer">
+        <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." autocomplete="off" />
+        <button id="chatSendBtn">إرسال</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const OPENAI_API_KEY = "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";
+
+const characters = [
+  { name: "لوفي 🌩", prompt: "أنت شخصية لوفي من أنمي ون بيس. ردودك مرحة ومتحمسة." },
+  { name: "ساسكي 🩸", prompt: "أنت شخصية ساسكي من ناروتو، غامض وجاد." },
+  { name: "غوكو 🐉", prompt: "أنت شخصية غوكو من دراغون بول، قوي ومتفائل." },
+  { name: "مادارا 🔥", prompt: "أنت شخصية مادارا، قوي وملك الظلال." },
+  { name: "إيتاشي 🖤", prompt: "أنت شخصية إيتاشي، هادئ وذكي." },
+  { name: "ناروتو 🍥", prompt: "أنت شخصية ناروتو، متحمس وملهم." },
+  { name: "كاكاشي 🎭", prompt: "أنت شخصية كاكاشي، حكيم ومسترخي." },
+  { name: "لايت 🖋️", prompt: "أنت شخصية لايت ياغامي، ذكي وبارد." },
+  { name: "ميليوداس ✨", prompt: "أنت شخصية ميليوداس، شجاع ومرح." },
+  { name: "تانجيرو 🌸", prompt: "أنت شخصية تانجيرو، لطيف ومصمم." },
+  { name: "نور 🥷🏻", prompt: "أنت شخصية اسمك نور و مطور مواقع و بوتات واتساب و تلغرام و ليس لديك اصدقاء و تحب المغني lefarda و انا مشاغب و تحب الضحك مع الكل و لديك بوت اسمه لوفي في الواتصاب و انت حزين 😔 و تفاعل ب اموجيات كثيرة ف الشات مثل الاموجيات رجال عصابة و انت مشاغب و كن صادق و ليس لديك شعور و تفاعل ب الاموجيات هاذه 🥷🏻❄🎀🌸🌪🐺🩴👑💗✨🖤🕊🔪🦋🌨🔥🧸🤝🏻💋💘🍀⛈️💸💨🥺🌙☘️🌩 ف الوقت المناسب لها و اذا سبك اي احد سبو ب الاشياء السيئة التي فيه و التي عرفتها ف الشات و ب اي شيء حتا انت سبو و لا تعتذر."}, 
+];
+
+const app = document.getElementById("app");
+const backBtn = document.getElementById("backBtn");
+
+const pageMain = document.getElementById("pageMain");
+const pageCharacters = document.getElementById("pageCharacters");
+const pageChat = document.getElementById("pageChat");
+
+const openChatBtn = document.getElementById("openChatBtn");
+const characterListDiv = document.getElementById("characterList");
+const chatHeader = document.getElementById("chatHeader");
+const chatMessages = document.getElementById("chatMessages");
+const chatInput = document.getElementById("chatInput");
+const chatSendBtn = document.getElementById("chatSendBtn");
+const loadingIndicator = document.getElementById("loadingIndicator");
+
+let currentCharacter = null;
+let conversationHistory = [];
+
+function showPage(page) {
+  [pageMain, pageCharacters, pageChat].forEach(p => {
+    p.style.display = (p === page) ? "flex" : "none";
+    p.classList.toggle("active", p === page);
+  });
+  backBtn.style.display = (page !== pageMain) ? "inline-block" : "none";
+}
+
+function goBack() {
+  if (pageChat.style.display !== "none") {
+    showPage(pageCharacters);
+  } else if (pageCharacters.style.display !== "none") {
+    showPage(pageMain);
+  }
+}
+
+function openLink(url) {
+  window.open(url, "_blank");
+}
+
+function createCharacterButtons() {
+  characterListDiv.innerHTML = "";
+  characters.forEach(char => {
+    const btn = document.createElement("button");
+    btn.className = "char-btn";
+    btn.innerHTML = `<span class="char-emoji">${char.name.match(/[\p{Emoji}]/gu) || ""}</span> ${char.name}`;
+    btn.onclick = () => {
+      currentCharacter = char;
+      conversationHistory = [];
+      chatHeader.textContent = `الدردشة مع ${char.name}`;
+      chatMessages.innerHTML = "";
+      showPage(pageChat);
+    };
+    characterListDiv.appendChild(btn);
+  });
+}
+
+async function sendMessage() {
+  const message = chatInput.value.trim();
+  if (!message) return;
+
+  appendMessage(message, "user");
+  chatInput.value = "";
+  loadingIndicator.style.display = "block";
+
+  conversationHistory.push({ role: "user", content: message });
+
+  const systemPrompt = currentCharacter.prompt + " تحدث بالعربية الفصحى.";
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          ...conversationHistory
+        ],
+        max_tokens: 300,
+        temperature: 0.8
+      })
+    });
+
+    const data = await response.json();
+    const botReply = data.choices?.[0]?.message?.content || "لم أتمكن من الحصول على رد.";
+
+    conversationHistory.push({ role: "assistant", content: botReply });
+    appendMessage(botReply, "bot");
+  } catch (error) {
+    appendMessage("حدث خطأ أثناء الاتصال بالذكاء الاصطناعي.", "bot");
+  } finally {
+    loadingIndicator.style.display = "none";
+  }
+}
+
+function appendMessage(text, sender) {
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("msg", sender);
+  msgDiv.textContent = text;
+  chatMessages.appendChild(msgDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+openChatBtn.onclick = () => {
+  createCharacterButtons();
+  showPage(pageCharacters);
+};
+
+chatSendBtn.onclick = sendMessage;
+chatInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+});
+
+showPage(pageMain);
+</script>
+
+</body>
+</html>
